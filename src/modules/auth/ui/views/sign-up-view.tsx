@@ -1,7 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,16 +11,21 @@ import { LoaderCircle, OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email(),
-  password: z.string().min(1, "Password is required"),
-  confirmPassword: z.string().min(1, "Confirm Password is required")
-}).refine((data)=> data.password === data.confirmPassword, {
-  message: "Passwords must match",
-  path: ["confirmPassword"]
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email(),
+    password: z.string().min(1, "Password is required"),
+    confirmPassword: z.string().min(1, "Confirm Password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
 
 const SignUpView = () => {
   const router = useRouter();
@@ -35,7 +38,7 @@ const SignUpView = () => {
       name: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
   });
 
@@ -47,10 +50,29 @@ const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        callbackURL: "/",
       },
       {
         onSuccess: () => {
-          router.push(`/`);
+          setLoading(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setLoading(false);
+          setError(error.message);
+        },
+      }
+    );
+  };
+
+  const onSocial = (provider: "github" | "google") => {
+    setLoading(true);
+    setError(null);
+    authClient.signIn.social(
+      { provider, callbackURL: "/" },
+      {
+        onSuccess: () => {
+          setLoading(false);
         },
         onError: ({ error }) => {
           setLoading(false);
@@ -151,11 +173,25 @@ const SignUpView = () => {
                   <span className="bg-card text-muted-foreground relative z-10 px-2">Or continue with</span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" type="button" className="w-full">
-                    Google
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full cursor-pointer"
+                    onClick={() => {
+                      onSocial("google");
+                    }}
+                  >
+                    <FcGoogle />
                   </Button>
-                  <Button variant="outline" type="button" className="w-full">
-                    Github
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full cursor-pointer"
+                    onClick={() => {
+                      onSocial("github");
+                    }}
+                  >
+                    <FaGithub />
                   </Button>
                 </div>
                 <div className="text-center text-sm">
