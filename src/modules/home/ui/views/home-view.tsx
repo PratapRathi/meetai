@@ -1,15 +1,14 @@
-import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation';
-import React from 'react'
+"use client"
 
-const HomeView = async () => {
-    const session = await auth.api.getSession({headers: await headers()});
-    if(!session) {
-        redirect("/sign-in")
-    }
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
+
+const HomeView = () => {
+  const trpc = useTRPC();
+  const {data} = useQuery(trpc.hello.queryOptions({text: "welcome to my world !"}));
+
   return (
-    <div>HomeView</div>
+    <div>{data?.greeting}</div>
   )
 }
 
