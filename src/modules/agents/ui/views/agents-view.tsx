@@ -1,4 +1,5 @@
 "use client"
+import { useAgentsFilters } from "@/modules/agents/hooks/use-agents-filters";
 import { DataTable } from '@/modules/agents/ui/components/data-table';
 import { columns } from '@/modules/agents/ui/components/columns';
 import { LoadingState } from '@/components/loading-state';
@@ -6,17 +7,18 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorState } from '@/components/error-state';
 import { useTRPC } from '@/trpc/client'
 import { EmptyState } from '@/modules/agents/ui/components/empty-state';
-
-
+import AgentsDataPagination from "../components/data-pagination";
 
 const AgentsView = () => {
+    const [filters, setFilters] = useAgentsFilters();
     const trpc = useTRPC();
-    const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions())
+    const {data} = useSuspenseQuery(trpc.agents.getMany.queryOptions({...filters}))
 
   return (
     <div className='flex-1 px-4 pb-4 md:px-8 flex flex-col gap-y-4'>
-        <DataTable data={data} columns={columns}/>
-        {data.length === 0 && (
+        <DataTable data={data.items} columns={columns}/>
+        <AgentsDataPagination page={filters.page} totalPages={data.totalPages} onPageChange={(page)=> setFilters({page})}/>
+        {data.items.length === 0 && (
             <EmptyState title='Create your first Agent' description='Create an agent to join your meetings. Each agent will follow your instructions and can interact with participants during the call.'/>
         )}
     </div>
