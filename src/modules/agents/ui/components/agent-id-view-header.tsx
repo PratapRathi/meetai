@@ -39,11 +39,11 @@ const AgentIdViewHeader = ({ agentId, agentName, onEdit, onRemove }: Props) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit}>
+                <DropdownMenuItem onClick={onEdit} className="cursor-pointer">
                     <PencilIcon className="size-4 text-black"/>
                     Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onRemove}>
+                <DropdownMenuItem onClick={onRemove} className="cursor-pointer">
                     <TrashIcon className="size-4 text-black"/>
                     Delete
                 </DropdownMenuItem>
