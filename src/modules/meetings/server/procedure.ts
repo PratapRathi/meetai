@@ -5,10 +5,26 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { and, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
+import { meetingsInsertSchema, meetingsUpdateSchema } from "../schema";
 
 
 
 export const meetingsRouter = createTRPCRouter({
+        create: protectedProcedure.input(meetingsInsertSchema).mutation(async ({ ctx, input }) => {
+        const [createdMeeting] = await db.insert(meetings).values({
+            ...input,
+            userId: ctx.auth.user.id
+        }).returning();
+        return createdMeeting;
+    }),
+
+    update: protectedProcedure.input(meetingsUpdateSchema).mutation(async ({ ctx, input }) => {
+            const [updatedMeeting] = await db.update(meetings).set(input).where(and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id))).returning();
+    
+            if (!updatedMeeting) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
+            return updatedMeeting;
+        }),
+
     getMany: protectedProcedure.input(z.object({
         page: z.number().default(DEFAULT_PAGE),
         pageSize: z.number().min(MIN_PAGE_SIZE).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
