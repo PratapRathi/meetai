@@ -22,14 +22,14 @@ export const meetingsRouter = createTRPCRouter({
     update: protectedProcedure.input(meetingsUpdateSchema).mutation(async ({ ctx, input }) => {
         const [updatedMeeting] = await db.update(meetings).set(input).where(and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id))).returning();
 
-        if (!updatedMeeting) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
+        if (!updatedMeeting) throw new TRPCError({ code: "NOT_FOUND", message: "Meeting not found" });
         return updatedMeeting;
     }),
 
     remove: protectedProcedure.input(z.object({id: z.string()})).mutation(async ({ ctx, input }) => {
         const [removedMeeting] = await db.delete(meetings).where(and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id))).returning();
 
-        if (!removedMeeting) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
+        if (!removedMeeting) throw new TRPCError({ code: "NOT_FOUND", message: "Meeting not found" });
         return removedMeeting;
     }),
 
