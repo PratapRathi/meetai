@@ -1,3 +1,4 @@
+"use client"
 import { useMeetingsFilters } from "@/modules/meetings/hooks/use-meetings-filters";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
