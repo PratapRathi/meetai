@@ -8,8 +8,8 @@ const ProcessingState = () => {
     >
       <EmptyState
         image="/processing.svg"
-        title="Meeting Completed"
-        description="This meeting is completed, summary will appear soon!"
+        title="Processing Summary"
+        description="We're generating your meeting summary. It will appear here shortly."
       />
     </div>
   );
