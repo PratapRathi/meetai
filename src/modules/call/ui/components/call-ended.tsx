@@ -7,13 +7,13 @@ const CallEnded = () => {
       <div className="py-4 px-8 flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-y-6 bg-background rounded-lg p-10 shadow-sm">
           <div className="flex flex-col gap-y-2 text-center">
-            <h6 className="text-lg font-medium">Bạn đã kết thúc cuộc gọi</h6>
+            <h6 className="text-lg font-medium">You have ended the Call</h6>
             <p className="text-sm">
-              Tóm tắt cuộc gọi sẽ được ghi lại trong vài phút.
+              The call summary will be available in a few minutes.
             </p>
           </div>
           <Button asChild>
-            <Link href="/meetings">Quay lại các cuộc họp</Link>
+            <Link href="/meetings">Return to Meetings</Link>
           </Button>
         </div>
       </div>
