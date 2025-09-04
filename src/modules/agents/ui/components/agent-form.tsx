@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { useTRPC } from "@/trpc/client";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AgentFormProps {
   onSuccess?: () => void;
@@ -20,19 +21,18 @@ interface AgentFormProps {
 }
 
 const AgentForm = ({ initialValues, onCancel, onSuccess }: AgentFormProps) => {
+  const router = useRouter();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-            trpc.agents.getMany.queryOptions({})
-        );
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
         onSuccess?.();
       },
       onError: (error) => {
-        toast.error(error.message)
+        toast.error(error.message);
       },
     })
   );
@@ -40,18 +40,16 @@ const AgentForm = ({ initialValues, onCancel, onSuccess }: AgentFormProps) => {
   const updateAgent = useMutation(
     trpc.agents.update.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-            trpc.agents.getMany.queryOptions({})
-        );
-        if(initialValues?.id) {
-            await queryClient.invalidateQueries(
-                trpc.agents.getOne.queryOptions({id: initialValues.id})
-            )
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+        await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions());
+        if (initialValues?.id) {
+          await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({ id: initialValues.id }));
         }
         onSuccess?.();
       },
       onError: (error) => {
-        toast.error(error.message)
+        toast.error(error.message);
+        if (error.data?.code === "FORBIDDEN") router.push("upgrade");
       },
     })
   );
@@ -69,7 +67,7 @@ const AgentForm = ({ initialValues, onCancel, onSuccess }: AgentFormProps) => {
 
   const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
     if (isEdit) {
-      updateAgent.mutate({...values, id: initialValues.id})
+      updateAgent.mutate({ ...values, id: initialValues.id });
     } else {
       createAgent.mutate(values);
     }
@@ -88,7 +86,7 @@ const AgentForm = ({ initialValues, onCancel, onSuccess }: AgentFormProps) => {
               <FormControl>
                 <Input {...field} placeholder="e.g. English Tutor" />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -104,7 +102,7 @@ const AgentForm = ({ initialValues, onCancel, onSuccess }: AgentFormProps) => {
                   placeholder="You are a helpful English assistent that can help me in practicing english"
                 />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
