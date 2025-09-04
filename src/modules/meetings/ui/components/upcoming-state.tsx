@@ -1,16 +1,14 @@
 "use client"
 import Link from "next/link";
-import { BanIcon, VideoIcon } from "lucide-react";
+import { VideoIcon } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 
 interface Props {
   meetingId: string;
-  onCancelMeeting: () => void;
-  isCancelling: boolean;
 }
 
-const UpcomingState = ({ meetingId, isCancelling, onCancelMeeting }: Props) => {
+const UpcomingState = ({ meetingId }: Props) => {
   return (
     <div
       className="bg-white rounded-lg px-4 py-5 flex flex-col gap-y-8 items-center
@@ -22,11 +20,7 @@ const UpcomingState = ({ meetingId, isCancelling, onCancelMeeting }: Props) => {
         description="Once you start this meeting, summary will appear here"
       />
       <div className="flex flex-col-reverse lg:flex-row lg:justify-center items-center gap-2 w-full">
-        <Button className="w-full lg:w-auto" variant="secondary" onClick={onCancelMeeting} disabled={isCancelling}>
-          <BanIcon />
-          Cancel Meeting
-        </Button>
-        <Button asChild className="w-full lg:w-auto" disabled={isCancelling}>
+        <Button asChild className="w-full lg:w-auto">
           <Link href={`/call/${meetingId}`}>
             <VideoIcon />
             Start Meeting
