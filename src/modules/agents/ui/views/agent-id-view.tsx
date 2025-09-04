@@ -26,8 +26,9 @@ const AgentIdView = ({ agentId }: Props) => {
 
   const removeAgent = useMutation(
     trpc.agents.remove.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+        await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions());
         router.push("/agents");
       },
       onError: (error) => {
@@ -50,9 +51,14 @@ const AgentIdView = ({ agentId }: Props) => {
   return (
     <>
       <RemoveConfirmation />
-      <UpdateAgentDialog open={updateAgentDialogOpen} onOpenChange={setUpdateAgentDialogOpen} initialValues={data}/>
+      <UpdateAgentDialog open={updateAgentDialogOpen} onOpenChange={setUpdateAgentDialogOpen} initialValues={data} />
       <div className="flex-1 py-4 px-4 md:px-8 flex flex-col gap-y-4">
-        <AgentIdViewHeader agentId={data.id} agentName={data.name} onEdit={() => setUpdateAgentDialogOpen(true)} onRemove={handleRemoveAgent} />
+        <AgentIdViewHeader
+          agentId={data.id}
+          agentName={data.name}
+          onEdit={() => setUpdateAgentDialogOpen(true)}
+          onRemove={handleRemoveAgent}
+        />
         <div className="bg-white rounded-lg border ">
           <div className="px-4 py-5 gap-y-5 flex flex-col col-span-5">
             <div className="flex items-center gap-x-3">
