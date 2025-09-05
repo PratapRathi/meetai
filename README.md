@@ -6,7 +6,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/license/anishvkalbhor/meetai?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Next.js-15-blue?style=for-the-badge&logo=next.js" />
-  <img src="https://img.shields.io/badge/Powered%20by-Gemini%20%7C%20OpenRouter.ai-yellow?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Powered%20by-OpenAi-yellow?style=for-the-badge" />
 </p>
 
 ---
@@ -38,7 +38,7 @@
 | Category        | Technologies                                                                 |
 |----------------|--------------------------------------------------------------------------------|
 | 🖥️ **Frontend** | Next.js 15, React 19, TypeScript, TailwindCSS, Shadcn UI                     |
-| 🧠 **AI Layer** | Google Gemini API, OpenRouter.ai, Huggingface API                            |
+| 🧠 **AI Layer** | OpenAI API                            |
 | 🔧 **Backend**  | tRPC, Drizzle ORM, PostgreSQL, Node.js                                        |
 | 📹 **Streaming**| Stream SDKs for Video & Chat                                                  |
 | 🔐 **Auth**     | Clerk, better-auth                                                            |
